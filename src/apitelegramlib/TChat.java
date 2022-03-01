@@ -14,9 +14,9 @@ import org.json.JSONObject;
 public class TChat {
     String id, first_name, type;
     public TChat(JSONObject json) {
-        this.id = Integer.toString(json.getInt("id"));
-        this.first_name = json.getString("first_name");
-        this.type = json.getString("type");
+        this.id = json.has("id") ? Long.toString(json.getLong("id")) : null;
+        this.first_name = json.has("first_name") ? json.getString("first_name") : null;
+        this.type = json.has("type") ? json.getString("type") : null;
     }
 
     public String getId() {

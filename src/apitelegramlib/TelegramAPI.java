@@ -30,6 +30,7 @@ public class TelegramAPI {
     boolean can_join_groups;
     boolean can_read_all_group_messages;
     boolean supports_inline_queries;
+    String lastOffset;
 
     public TelegramAPI(String token) throws MalformedURLException, IOException {
         this.token = token;
@@ -46,20 +47,28 @@ public class TelegramAPI {
             this.can_join_groups = obj.getJSONObject("result").getBoolean("can_join_groups");
             this.can_read_all_group_messages = obj.getJSONObject("result").getBoolean("can_read_all_group_messages");
             this.supports_inline_queries = obj.getJSONObject("result").getBoolean("supports_inline_queries");
-        }
-        else {
+            this.lastOffset = null;
+        } else {
             System.out.println("ERRORE: qualcosa è andato storto");
         }
     }
-    
-    public ArrayList<TUpdate> getUpdates() throws MalformedURLException, IOException{
+
+    public void sendMessage(String chatId, String message) throws MalformedURLException, IOException {
+        sc = new Scanner(new URL(baseurl + "sendMessage?chat_id=" + URLEncoder.encode(chatId) + "&text=" + URLEncoder.encode(message)).openStream());
+        sc.next();
+    }
+
+    public ArrayList<TUpdate> getUpdates() throws MalformedURLException, IOException {
         ArrayList<TUpdate> list = new ArrayList<TUpdate>();
-        sc = new Scanner(new URL(baseurl + "getUpdates").openStream());
+        sc = new Scanner(new URL(baseurl + "getUpdates" + (lastOffset != null ? "?offset=" + lastOffset : "")).openStream());
         String json = sc.useDelimiter("\001A").next();
         JSONObject mess = new JSONObject(json);
         JSONArray arr = mess.getJSONArray("result");
-        for (int i = 0; i < arr.length(); i++){
+        for (int i = 0; i < arr.length(); i++) {
             list.add(new TUpdate(arr.getJSONObject(i)));
+        }
+        if (list.size() > 0){
+            lastOffset = String.valueOf(Integer.valueOf(list.get(list.size() - 1).update_id) + 1);
         }
         return list;
     }

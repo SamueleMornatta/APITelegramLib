@@ -18,11 +18,11 @@ public class TMessage {
     String date;
     String text;
     public TMessage(JSONObject json) {
-        this.message_id = Integer.toString(json.getInt("message_id"));
+        this.message_id = json.has("message_id") ? Integer.toString(json.getInt("message_id")) : null;
         this.from = new TUtente(json.getJSONObject("from"));
         this.chat = new TChat(json.getJSONObject("chat"));
-        this.date = Integer.toString(json.getInt("date"));
-        this.text = json.getString("text");
+        this.date = json.has("date") ? Integer.toString(json.getInt("date")) : null;
+        this.text = json.has("text") ? json.getString("text") : null;
     }
 
     public String getMessage_id() {

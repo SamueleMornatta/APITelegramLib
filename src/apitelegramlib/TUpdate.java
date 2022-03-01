@@ -15,7 +15,7 @@ public class TUpdate {
     String update_id;
     TMessage mess;
     public TUpdate(JSONObject json) {
-        this.update_id = Integer.toString(json.getInt("update_id"));
+        this.update_id = json.has("update_id") ? Integer.toString(json.getInt("update_id")) : null;
         this.mess = new TMessage(json.getJSONObject("message"));
     }
 
