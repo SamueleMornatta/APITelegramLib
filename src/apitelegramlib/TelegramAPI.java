@@ -5,6 +5,7 @@
  */
 package apitelegramlib;
 
+import java.awt.Image;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -57,6 +58,11 @@ public class TelegramAPI {
         sc = new Scanner(new URL(baseurl + "sendMessage?chat_id=" + URLEncoder.encode(chatId) + "&text=" + URLEncoder.encode(message)).openStream());
         sc.next();
     }
+    
+    public void sendPhoto(String chatId, String photourl) throws MalformedURLException, IOException{
+        sc = new Scanner(new URL(baseurl + "sendPhoto?chat_id=" + URLEncoder.encode(chatId, "UTF-8") + "&photo=" + photourl).openStream());
+        sc.next();
+    }
 
     public ArrayList<TUpdate> getUpdates() throws MalformedURLException, IOException {
         ArrayList<TUpdate> list = new ArrayList<TUpdate>();
@@ -72,6 +78,8 @@ public class TelegramAPI {
         }
         return list;
     }
+    
+    
 
     public String getToken() {
         return token;
